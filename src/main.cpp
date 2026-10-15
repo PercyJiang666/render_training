@@ -1,12 +1,26 @@
 #include"color.h"
 #include"ray.h"
 #include<iostream>
+bool hitsphere(const point3& center, double radius,const ray& r){
+    vec3 ca=(r.origin()-center);
+    double a=r.direction().length_square();
+    double b=2*dot(r.direction(),ca);
+    double c=ca.length_square()-radius*radius;
+    if(b*b-4*a*c<0)return false;
+    return true;
+    /*if(-b>0){
+        double t=(-b-D)/2.0/a;
+        r.at(t)
+    }*/
+}
 color ray_color(const ray& r){
+    if(hitsphere(point3(0,0,-1),0.5,r))return color(1,0,0);
     vec3 v=unit_vector(r.direction());
     auto a=(v.y()+1.0)*0.5;
     //return color(1,1,1);
     return (1.0-a)*color(1.0,1.0,1.0)+a*color(0.5,0.7,1.0);
 }
+
 int main(){
     //image settings
     auto aspect_ratio = 16.0/9.0;
