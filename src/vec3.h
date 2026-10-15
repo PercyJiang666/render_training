@@ -11,7 +11,7 @@ public:
     double y()const{return e[1];}
     double z()const{return e[2];}
     vec3 operator-(){return vec3({-e[0],-e[1],-e[2]});}
-    vec3 operator-(vec3 v){return vec3({v.x()-e[0],v.y()-e[1],v.z()-e[2]});}
+    vec3 operator-(vec3 v){return vec3({e[0]-v.x(),e[1]-v.y(),e[2]-v.z()});}
     double& operator[](int i){return e[i];}
     double operator[](int i)const{return e[i];}
     vec3& operator+=(const vec3& v){
@@ -72,7 +72,7 @@ inline std::ostream& operator<<(std::ostream& out, const vec3& v){
     return out <<v[0]<<' '<<v[1]<<' '<<v[2];
 }
 inline vec3 operator+(const vec3& v1,const vec3& v2){
-    return vec3(v1[0]+v2[0],v1[1]+v2[1],v1[2]+v1[2]);
+    return vec3(v1[0]+v2[0],v1[1]+v2[1],v1[2]+v2[2]);
 }
 inline vec3 operator-(const vec3& v1,const vec3& v2){
     return vec3(v1[0]-v2[0],v1[1]-v2[1],v1[2]-v2[2]);
@@ -90,7 +90,7 @@ inline vec3 operator/(const vec3& v,double c){
     return v*(1/c);
 }
 inline vec3 operator/(double c,const vec3& v){
-    return v*(1/c);
+    return vec3(c/v[0],c/v[1],c/v[2]);
 }
 inline vec3 operator/(const vec3& v1,const vec3& v2){
     return vec3(v1[0]/v2[0],v1[1]/v2[1],v1[2]/v2[2]);
@@ -103,7 +103,7 @@ inline double det2D(double a,double b,double c,double d){
 }
 inline vec3 cross(const vec3& v1,const vec3& v2){
     return vec3(det2D(v1[1],v1[2],v2[1],v2[2]),
-                det2D(v1[2],v1[0],v2[2],v2[0]),
+                -det2D(v1[0],v1[2],v2[0],v2[2]),
                 det2D(v1[0],v1[1],v2[0],v2[1]));
 }
 inline vec3 unit_vector(const vec3& v){
