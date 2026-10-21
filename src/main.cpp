@@ -1,20 +1,25 @@
 #include"color.h"
 #include"ray.h"
 #include<iostream>
-bool hitsphere(const point3& center, double radius,const ray& r){
+double hitsphere(const point3& center, double radius,const ray& r){
     vec3 ca=(r.origin()-center);
-    double a=r.direction().length_square();
-    double b=2*dot(r.direction(),ca);
-    double c=ca.length_square()-radius*radius;
-    if(b*b-4*a*c<0)return false;
-    return true;
+    auto a=r.direction().length_square();
+    auto h=dot(r.direction(),ca);
+    auto c=ca.length_square()-radius*radius;
+    auto d=h*h-a*c;
+    if(d<0)return -1.0;
+    return (h-sqrt(d))/a;
     /*if(-b>0){
         double t=(-b-D)/2.0/a;
         r.at(t)
     }*/
 }
 color ray_color(const ray& r){
-    if(hitsphere(point3(0,0,-1),0.5,r))return color(1,0,0);
+    auto t=hitsphere(point3(0,0,-1),0.5,r);
+    if(t>0.0){
+        vec3 N=(r.at(t)-point3(0,0,-1))*2;
+        return 0.5*color(N.x()+1,N.y()+1,N.z()+1);
+    }
     vec3 v=unit_vector(r.direction());
     auto a=(v.y()+1.0)*0.5;
     //return color(1,1,1);
