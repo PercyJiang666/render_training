@@ -5,13 +5,11 @@
 class vec3{
 public:
     double e[3];
-    vec3():e{0,0,0}{}
-    vec3(double e1,double e2,double e3):e{e1,e2,e3}{};
+    vec3(double e0 = 0,double e1 = 0,double e2 = 0):e{e0,e1,e2}{};
     double x()const{return e[0];}
     double y()const{return e[1];}
     double z()const{return e[2];}
-    vec3 operator-(){return vec3({-e[0],-e[1],-e[2]});}
-    vec3 operator-(vec3 v){return vec3({e[0]-v.x(),e[1]-v.y(),e[2]-v.z()});}
+    vec3 operator-()const{return vec3({-e[0],-e[1],-e[2]});}
     double& operator[](int i){return e[i];}
     double operator[](int i)const{return e[i];}
     vec3& operator+=(const vec3& v){
@@ -61,7 +59,6 @@ inline vec3 operator*(const vec3& v,double c);
 inline vec3 operator*(double c,const vec3& v);
 inline vec3 operator*(const vec3& v1,const vec3& v2);
 inline vec3 operator/(const vec3& v,double c);
-inline vec3 operator/(double c,const vec3& v);
 inline vec3 operator/(const vec3& v1,const vec3& v2);
 inline double dot(const vec3& v1,const vec3& v2);
 inline double det2D(double a,double b,double c,double d);
@@ -88,9 +85,6 @@ inline vec3 operator*(const vec3& v1,const vec3& v2){
 }
 inline vec3 operator/(const vec3& v,double c){
     return v*(1/c);
-}
-inline vec3 operator/(double c,const vec3& v){
-    return vec3(c/v[0],c/v[1],c/v[2]);
 }
 inline vec3 operator/(const vec3& v1,const vec3& v2){
     return vec3(v1[0]/v2[0],v1[1]/v2[1],v1[2]/v2[2]);
