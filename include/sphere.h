@@ -5,7 +5,7 @@ private:
     double radius;
 public:
     sphere(point3 o,double r):center(o),radius(r){}
-    bool hit(const ray& r,double ray_tmin,double ray_tmax,hit_record& rec)const override{
+    bool hit(const ray& r,const interval& ray_t,hit_record& rec)const override{
         vec3 oc=(center-r.origin());
         auto a=r.direction().length_square();
         auto h=dot(r.direction(),oc);
@@ -14,9 +14,9 @@ public:
         if(d<0)return false;
         auto sqrtd=std::sqrt(d);
         auto root = (h-sqrtd)/a;
-        if(root<=ray_tmin||ray_tmax<=root){
+        if(!ray_t.surround(root)){
             root = (h+sqrtd)/a;
-                if(root<=ray_tmin||ray_tmax<=root)return false;
+                if(!ray_t.surround(root))return false;
         }
         rec.t = root;
         rec.p = r.at(rec.t);
