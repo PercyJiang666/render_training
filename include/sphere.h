@@ -3,8 +3,10 @@ class sphere : public hittable{
 private:
     point3 center;
     double radius;
+    shared_ptr<material> mat;
 public:
-    sphere(point3 o,double r):center(o),radius(r){}
+    sphere(const point3& center,double radius,const shared_ptr<material>& mat)
+    : center(center),radius(radius),mat(mat){}
     bool hit(const ray& r,const interval& ray_t,hit_record& rec)const override{
         vec3 oc=(center-r.origin());
         auto a=r.direction().length_square();
@@ -22,6 +24,7 @@ public:
         rec.p = r.at(rec.t);
         vec3 outward_normal = (rec.p-center)/radius;
         rec.set_face_normal(r,outward_normal);
+        rec.mat = mat;
         return true;
     }
 };

@@ -2,7 +2,7 @@
 #include"rtweekend.h"
 #include"hittable_list.h"
 #include"color.h"
-
+#include"material.h"
 class camera{
 public:
     double aspect_ratio = 1.0;
@@ -54,7 +54,7 @@ private:
 
         center = point3(0,0,0);
         
-        auto focal_lenght = 1.0;
+        auto focal_length = 1.0;
         auto viewport_height = 2.0;
         auto viewport_width = (viewport_height)*(double(image_width)/image_height);
         
@@ -65,7 +65,7 @@ private:
         pixel_delta_v = viewport_v/image_height;
 
         auto viewport_upper_left = 
-            center - vec3(0,0,focal_lenght) - viewport_u/2 - viewport_v/2; 
+            center - vec3(0,0,focal_length) - viewport_u/2 - viewport_v/2; 
         pixel00_loc = viewport_upper_left + (pixel_delta_u + pixel_delta_v)*0.5;
         
     }
@@ -73,8 +73,11 @@ private:
         if(depth<=0)return color(0,0,0);
         hit_record rec;
         if(world.hit(r,interval(0.001,infinity),rec)){
-            vec3 direction = random_on_hemisphere(rec.normal);
-            return 0.5*ray_color(ray(rec.p,direction),depth-1,world);
+            ray scattered;
+            color attenuation;
+            if(rec.mat->scatter(r,rec,attenuation,scattered))
+                return attenuation * ray_color(scattered,depth-1,world);
+            return color(0,0,0);
         }
         vec3 v=unit_vector(r.direction());
         auto a=(v.y()+1.0)*0.5;
